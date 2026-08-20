@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>María Fernanda Tabera Bazán — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171c;
+    --ink-soft:#1d222a;
+    --paper:#f6f4ef;
+    --line:#2b313b;
+    --accent:#4a5cff;
+    --accent-soft:#c9cdff;
+    --amber:#ffb020;
+    --muted:#8b93a3;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--body);
+    line-height:1.5;
+  }
+  ::selection{background:var(--accent);color:white;}
+  a{color:inherit;}
+
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px;}
+
+  /* ---- top nav ---- */
+  nav.top{
+    position:sticky;top:0;z-index:50;
+    background:rgba(20,23,28,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;}
+  .brand{font-family:var(--mono);font-size:14px;color:var(--accent-soft);letter-spacing:0.02em;}
+  .brand b{color:var(--paper);}
+  nav.top ul{list-style:none;display:flex;gap:26px;margin:0;padding:0;font-family:var(--mono);font-size:13px;}
+  nav.top ul li a{text-decoration:none;color:var(--muted);transition:color .15s;}
+  nav.top ul li a:hover{color:var(--accent-soft);}
+  nav.top ul{display:none;}
+  @media(min-width:720px){nav.top ul{display:flex;}}
+
+  /* ---- hero: devtools element-inspector motif ---- */
+  header.hero{padding:88px 0 64px;border-bottom:1px solid var(--line);}
+  .eyebrow-tag{
+    font-family:var(--mono);font-size:13px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;margin-bottom:22px;
+  }
+  .eyebrow-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px rgba(255,176,32,0.15);}
+  h1.name{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(2.4rem,6vw,4.2rem);
+    line-height:1.02;margin:0 0 18px;letter-spacing:-0.01em;
+  }
+  h1.name .accent{color:var(--accent-soft);}
+  p.role-line{font-family:var(--mono);font-size:16px;color:var(--accent-soft);margin:0 0 28px;}
+  p.role-line span{color:var(--muted);}
+  p.pitch{max-width:620px;font-size:17px;color:#d7dae0;margin:0 0 34px;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:46px;}
+  .btn{
+    font-family:var(--mono);font-size:14px;padding:12px 20px;border-radius:8px;
+    text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s, background .15s;
+  }
+  .btn.primary{background:var(--accent);color:white;}
+  .btn.primary:hover{background:#5c6cff;transform:translateY(-1px);}
+  .btn.ghost{border:1px solid var(--line);color:var(--paper);}
+  .btn.ghost:hover{border-color:var(--accent-soft);color:var(--accent-soft);}
+
+  /* the actual live web component inspector */
+  .inspector{
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--ink-soft);
+  }
+  .inspector-bar{
+    display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+  }
+  .inspector-bar .d{width:9px;height:9px;border-radius:50%;background:#444c5a;}
+  .inspector-body{padding:20px 22px;font-family:var(--mono);font-size:13.5px;line-height:1.9;overflow-x:auto;}
+  .tag{color:#7f9dff;}
+  .attr{color:#ffb020;}
+  .val{color:#8fd6a8;}
+  .indent{padding-left:22px;}
+
+  /* ---- sections ---- */
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:34px;}
+  .section-head .tagmark{font-family:var(--mono);font-size:13px;color:var(--muted);}
+  .section-head h2{font-family:var(--display);font-size:1.7rem;margin:0;font-weight:600;}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1fr;gap:34px;}
+  @media(min-width:760px){.about-grid{grid-template-columns:1.3fr 1fr;}}
+  .about-grid p{color:#d7dae0;font-size:15.5px;}
+  .fact-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+  .fact-list li{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding-bottom:10px;font-size:14px;}
+  .fact-list li span:first-child{color:var(--muted);font-family:var(--mono);}
+
+  /* experience timeline built as custom elements */
+  timeline-item{display:block;}
+  .exp-list{display:flex;flex-direction:column;}
+
+  /* skills as custom chip elements */
+  .stack-block{margin-bottom:26px;}
+  .stack-block h3{font-family:var(--mono);font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 12px;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:9px;}
+
+  /* certs */
+  .cert-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media(min-width:700px){.cert-grid{grid-template-columns:1fr 1fr;}}
+  .cert-card{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--ink-soft);}
+  .cert-card .name{font-weight:600;font-size:14.5px;margin-bottom:3px;}
+  .cert-card .meta{font-family:var(--mono);font-size:12px;color:var(--muted);}
+
+  /* contact / footer */
+  footer{padding:70px 0 60px;}
+  footer h2{font-family:var(--display);font-size:1.9rem;margin:0 0 14px;}
+  footer p{color:#d7dae0;max-width:520px;margin:0 0 30px;}
+  .contact-row{display:flex;flex-wrap:wrap;gap:14px;}
+  .foot-note{margin-top:60px;font-family:var(--mono);font-size:12px;color:var(--muted);}
+
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <div class="brand">&lt;<b>fernanda</b>.dev/&gt;</div>
+    <ul>
+      <li><a href="#about">about</a></li>
+      <li><a href="#experience">experiencia</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#certs">certificaciones</a></li>
+      <li><a href="#contact">contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow-tag"><span class="dot"></span> disponible para nuevas oportunidades</div>
+    <h1 class="name">María Fernanda<br><span class="accent">Tabera Bazán</span></h1>
+    <p class="role-line">Frontend Developer <span>·</span> UX/UI Designer <span>·</span> Web Components</p>
+    <p class="pitch">Construyo interfaces con una sensibilidad de diseño poco común en frontend: componentes reutilizables y desacoplados (LitElement, ecosistema Cells de BBVA), validados con la misma rigurosidad con la que antes probaba plataformas de streaming completas.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="mailto:fernandatabera@gmail.com">Escribirme</a>
+      <a class="btn ghost" href="https://linkedin.com/in/fernandataberab" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn ghost" href="tel:+525560054917">+52 55 6005 4917</a>
+    </div>
+
+    <div class="inspector">
+      <div class="inspector-bar"><span class="d"></span><span class="d"></span><span class="d"></span>&nbsp;&nbsp;elements — esta página está hecha con Web Components reales</div>
+      <div class="inspector-body">
+&lt;<span class="tag">fernanda-hero</span> <span class="attr">role</span>=<span class="val">"frontend-developer"</span>&gt;<br>
+<span class="indent">&lt;<span class="tag">skill-chip</span> <span class="attr">name</span>=<span class="val">"LitElement"</span>&gt;&lt;/<span class="tag">skill-chip</span>&gt;</span><br>
+<span class="indent">&lt;<span class="tag">skill-chip</span> <span class="attr">name</span>=<span class="val">"Web Components"</span>&gt;&lt;/<span class="tag">skill-chip</span>&gt;</span><br>
+<span class="indent">&lt;<span class="tag">skill-chip</span> <span class="attr">name</span>=<span class="val">"REST API · fetch"</span>&gt;&lt;/<span class="tag">skill-chip</span>&gt;</span><br>
+&lt;/<span class="tag">fernanda-hero</span>&gt;
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="section-head"><span class="tagmark">&lt;about&gt;</span><h2>Perfil</h2></div>
+      <p>Ingeniera en Informática (UPIICSA — IPN) y desarrolladora frontend con experiencia construyendo interfaces en entornos de alta exigencia técnica: banca (BBVA) y streaming (ClaroVideo). Domino HTML5, CSS3, JavaScript ES6+, Web Components con LitElement, Vue.js, React y Angular, además de pruebas unitarias con Mocha, Chai y Sinon.</p>
+      <p>Mi diferenciador es la sensibilidad UX/UI —formación en Design Thinking— aplicada a código: no solo construyo interfaces que funcionan, construyo interfaces que se sienten intuitivas. He trabajado en equipos multidisciplinarios bajo Scrum y tengo experiencia freelance de punta a punta, desde arquitectura de información hasta implementación.</p>
+    </div>
+    <ul class="fact-list">
+      <li><span>Ubicación</span><span>CDMX, México</span></li>
+      <li><span>Rol actual</span><span>Frontend Developer</span></li>
+      <li><span>Español</span><span>Nativo</span></li>
+      <li><span>Inglés</span><span>Conversacional</span></li>
+      <li><span>Certificación Scrum</span><span>Certified Scrum Master</span></li>
+      <li><span>Formación</span><span>UPIICSA · IPN, 2019–2024</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="section-head"><span class="tagmark">&lt;experience&gt;</span><h2>Experiencia profesional</h2></div>
+    <div class="exp-list" id="exp-mount"></div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="section-head"><span class="tagmark">&lt;stack&gt;</span><h2>Tech stack</h2></div>
+
+    <div class="stack-block">
+      <h3>Frontend & JavaScript</h3>
+      <div class="chip-row" id="chips-frontend"></div>
+    </div>
+    <div class="stack-block">
+      <h3>Frameworks & Web Components</h3>
+      <div class="chip-row" id="chips-frameworks"></div>
+    </div>
+    <div class="stack-block">
+      <h3>Testing, versionado & datos</h3>
+      <div class="chip-row" id="chips-tools"></div>
+    </div>
+    <div class="stack-block">
+      <h3>UX / Diseño & metodologías</h3>
+      <div class="chip-row" id="chips-ux"></div>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="section-head"><span class="tagmark">&lt;certifications&gt;</span><h2>Certificaciones & formación</h2></div>
+    <div class="cert-grid" id="cert-mount"></div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <h2>Construyamos algo juntas.</h2>
+    <p>Abierta a roles de Frontend Developer donde el detalle en UI/UX y los componentes bien construidos importen tanto como el negocio.</p>
+    <div class="contact-row">
+      <a class="btn primary" href="mailto:fernandatabera@gmail.com">fernandatabera@gmail.com</a>
+      <a class="btn ghost" href="https://linkedin.com/in/fernandataberab" target="_blank" rel="noopener">linkedin.com/in/fernandataberab</a>
+    </div>
+    <p class="foot-note">construido con LitElement &amp; Web Components reales — ver el árbol de elementos arriba.</p>
+  </div>
+</footer>
+
+<script type="module">
+import { LitElement, html, css } from "https://cdn.jsdelivr.net/gh/lit/dist@3/all/lit-all.min.js";
+
+/* ---- <skill-chip> ---- */
+class SkillChip extends LitElement {
+  static properties = { name: {type:String} };
+  static styles = css`
+    :host{display:inline-block;}
+    span{
+      font-family:'JetBrains Mono',monospace;font-size:12.5px;
+      border:1px solid #2b313b;color:#e7e9ee;background:#1d222a;
+      padding:7px 12px;border-radius:20px;display:inline-block;
+      transition:border-color .15s, color .15s;
+    }
+    span:hover{border-color:#c9cdff;color:#c9cdff;}
+  `;
+  render(){ return html`<span>${this.name}</span>`; }
+}
+customElements.define('skill-chip', SkillChip);
+
+/* ---- <timeline-item> ---- */
+class TimelineItem extends LitElement {
+  static properties = { role:{type:String}, org:{type:String}, period:{type:String}, tags:{type:String} };
+  static styles = css`
+    :host{display:block;padding:22px 0;border-bottom:1px solid #2b313b;}
+    :host(:last-child){border-bottom:none;}
+    .row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;}
+    .role{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;color:#f6f4ef;}
+    .org{color:#c9cdff;font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+    .period{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8b93a3;}
+    .tags{font-size:12px;color:#8b93a3;margin-top:6px;}
+    ::slotted(ul){margin:10px 0 0;padding-left:18px;color:#d7dae0;font-size:14.5px;line-height:1.7;}
+  `;
+  render(){
+    return html`
+      <div class="row">
+        <div>
+          <div class="role">${this.role}</div>
+          <div class="org">${this.org}</div>
+        </div>
+        <div class="period">${this.period}</div>
+      </div>
+      <slot></slot>
+      <div class="tags">${this.tags}</div>
+    `;
+  }
+}
+customElements.define('timeline-item', TimelineItem);
+
+/* ---- mount experience ---- */
+const expMount = document.getElementById('exp-mount');
+expMount.innerHTML = `
+  <timeline-item role="Data Engineer" org="Softtek · BBVA" period="2024 — sep. 2025" tags="LitElement · Web Components · Cells · REST API · Git · Scrum · Jira">
+    <ul>
+      <li>Capacitación y colaboración en Cells (ecosistema interno de BBVA basado en LitElement) construyendo componentes reutilizables y desacoplados.</li>
+      <li>Consumo de APIs REST con fetch, manejo de flujos asíncronos con async/await y Promises.</li>
+      <li>Transformación de datos financieros sensibles (PySpark, AWS S3, Athena) junto a equipos de frontend, backend y producto bajo Scrum.</li>
+      <li>Gestión de código con Git/GitHub: branching, pull requests, Semver.</li>
+    </ul>
+  </timeline-item>
+  <timeline-item role="QA Tester" org="Grupo Carso · ClaroVideo" period="2022 — 2023" tags="Functional Testing · UX Validation · Jira · Scrum">
+    <ul>
+      <li>Pruebas funcionales (Smoke, SIT, UAT, E2E) sobre plataforma de streaming, con evidencia visual completa.</li>
+      <li>Identificación de inconsistencias UI/UX y propuestas de mejora en la arquitectura de información del catálogo.</li>
+      <li>Pruebas cross-device y cross-browser por iniciativa propia, ampliando la cobertura definida.</li>
+    </ul>
+  </timeline-item>
+  <timeline-item role="Frontend & UX/UI Designer — Freelance" org="PowerSelf Technologies" period="2021" tags="Vue.js · Web Components · REST API · WordPress">
+    <ul>
+      <li>Diseño y desarrollo de sitio corporativo de punta a punta: arquitectura de información, wireframes, diseño visual e implementación.</li>
+      <li>Aplicación de principios UX — jerarquía visual, accesibilidad, flujos claros.</li>
+      <li>Pruebas de rendimiento y usabilidad autónomas, sin solicitud del cliente.</li>
+    </ul>
+  </timeline-item>
+`;
+
+/* ---- mount skill chips ---- */
+const groups = {
+  'chips-frontend': ['HTML5','CSS3','SASS','BEM','Responsive Design','JavaScript ES6+','Async/Await','fetch','axios'],
+  'chips-frameworks': ['LitElement','Web Components (Cells/BBVA)','Vue.js','React','Angular'],
+  'chips-tools': ['Mocha','Chai','Sinon','Git · GitHub','Semver','PySpark','AWS S3','Athena','SQL'],
+  'chips-ux': ['UX/UI Design','Design Thinking','Figma','Zeplin','Scrum','SAFe 6 Practitioner']
+};
+for(const [id, items] of Object.entries(groups)){
+  const el = document.getElementById(id);
+  el.innerHTML = items.map(i => `<skill-chip name="${i}"></skill-chip>`).join('');
+}
+
+/* ---- mount certs ---- */
+const certs = [
+  ['Certified Scrum Master (SM)', ''],
+  ['SAFe® 6 Practitioner', 'Scaled Agile, Inc.'],
+  ['SFC — Scrum Fundamentals Certified', ''],
+  ['AWS Technical Essentials', 'AWS Training & Certification · 2025'],
+  ['React: Zero to Expert (Hooks & MERN)', 'Alura · 2024'],
+  ['Web Components con LitElement', 'Alura · 2024'],
+  ['Frontend Developer', 'Platzi'],
+  ['Introducción a UX/UI Design', 'Platzi'],
+  ['Design Thinking', 'Minds Garage'],
+  ['Tester', 'Fundación Carlos Slim · 9.38 / 2023'],
+];
+document.getElementById('cert-mount').innerHTML = certs.map(([name, meta]) => `
+  <div class="cert-card">
+    <div class="name">${name}</div>
+    ${meta ? `<div class="meta">${meta}</div>` : ''}
+  </div>
+`).join('');
+</script>
+
+</body>
+</html>
